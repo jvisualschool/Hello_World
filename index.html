@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World | Next-Gen Experience</title>
+    <title>Hello World | Particle Experience</title>
     <style>
         /* Import Font */
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap');
@@ -19,7 +20,12 @@
         }
 
         /* Reset & Base */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -30,7 +36,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            perspective: 1000px; /* For 3D effect */
+            perspective: 1000px;
         }
 
         /* Ambient Background */
@@ -42,6 +48,7 @@
             z-index: 0;
             pointer-events: none;
         }
+
         .blob {
             position: absolute;
             border-radius: 50%;
@@ -49,13 +56,21 @@
             opacity: 0.6;
             animation: float 10s infinite ease-in-out;
         }
+
         .blob-1 {
-            top: 10%; left: 25%; width: 500px; height: 500px;
+            top: 10%;
+            left: 25%;
+            width: 500px;
+            height: 500px;
             background: radial-gradient(circle, var(--secondary-accent) 0%, transparent 70%);
             animation-delay: 0s;
         }
+
         .blob-2 {
-            bottom: 10%; right: 25%; width: 600px; height: 600px;
+            bottom: 10%;
+            right: 25%;
+            width: 600px;
+            height: 600px;
             background: radial-gradient(circle, var(--primary-accent) 0%, transparent 70%);
             animation-delay: -5s;
         }
@@ -65,45 +80,47 @@
             position: relative;
             z-index: 10;
             text-align: center;
-            padding: 5rem 7rem;
+            width: 800px;
+            /* Canvas 크기 확보를 위해 고정/최대 너비 설정 */
+            max-width: 90vw;
+            padding: 3rem 2rem;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             transform-style: preserve-3d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Typography */
-        h1 {
-            font-size: 7rem;
-            font-weight: 800;
-            letter-spacing: -3px;
-            line-height: 1.1;
-            background: linear-gradient(135deg, #fff 0%, var(--primary-accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.3));
-            animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            opacity: 0;
-            transform: translateY(30px);
+        /* Canvas Area */
+        #particleCanvas {
+            width: 100%;
+            height: 300px;
+            /* background: rgba(0,0,0,0.2); Debug */
+            margin-bottom: 1rem;
+            cursor: pointer;
         }
-        
+
         p {
             font-size: 1.5rem;
             font-weight: 300;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             letter-spacing: 0.5px;
             animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards;
             opacity: 0;
             transform: translateY(30px);
+            pointer-events: none;
+            /* 캔버스 클릭 방해 방지 */
         }
 
         /* Interactive Button */
         .btn {
-            margin-top: 3.5rem;
+            margin-top: 2rem;
             padding: 1.2rem 3rem;
             font-size: 1rem;
             font-weight: 700;
@@ -118,7 +135,7 @@
             animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s forwards;
             opacity: 0;
             transform: translateY(30px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -127,8 +144,10 @@
         .btn::before {
             content: '';
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
             z-index: -1;
             transition: opacity 0.4s;
@@ -137,23 +156,29 @@
 
         .btn:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             color: white;
         }
-        
+
         .btn:hover::before {
             opacity: 1;
         }
 
-        .btn:active {
-            transform: translateY(-2px);
-        }
-
         /* Animations */
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -50px) scale(1.1); }
-            66% { transform: translate(-30px, 30px) scale(0.9); }
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-30px, 30px) scale(0.9);
+            }
         }
 
         @keyframes fadeInUp {
@@ -177,6 +202,7 @@
                 transition: width 0.3s, height 0.3s, border-color 0.3s;
                 mix-blend-mode: difference;
             }
+
             .cursor-dot {
                 position: fixed;
                 width: 6px;
@@ -187,71 +213,233 @@
                 z-index: 10000;
                 transform: translate(-50%, -50%);
             }
+
             body:active .cursor-follower {
-                width: 20px;
-                height: 20px;
+                width: 40px;
+                height: 40px;
                 border-color: var(--primary-accent);
+                background-color: rgba(0, 243, 255, 0.1);
             }
         }
-
     </style>
 </head>
+
 <body>
 
-    <!-- Ambient Blobs -->
     <div class="ambient-light">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- Custom Cursor (Desktop only) -->
     <div class="cursor-follower" id="follower"></div>
     <div class="cursor-dot" id="dot"></div>
 
-    <!-- Main Content -->
     <div class="container" id="card">
-        <h1>HELLO<br>WORLD.</h1>
-        <p>Experience the Future of Web Design</p>
+        <!-- Canvas for Particle Text -->
+        <canvas id="particleCanvas"></canvas>
+        <p>Click and hold to explode particles!</p>
+        <!-- Button (Optional, keeping for design balance) -->
         <button class="btn" id="exploreBtn">Get Started</button>
     </div>
 
     <script>
-        // --- 3D Tilt Effect ---
-        const card = document.getElementById('card');
-        const container = document.body;
+        /**
+         * PARTICLE SYSTEM
+         */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
 
-        container.addEventListener('mousemove', (e) => {
+        // Canvas Dimensions
+        let canvasWidth = 800; // Internal resolution width
+        let canvasHeight = 300; // Internal resolution height
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        let particlesArray = [];
+
+        // Mouse State for Canvas Interaction
+        const mouse = {
+            x: null,
+            y: null,
+            radius: 100, // Interaction radius
+            isPressed: false
+        };
+
+        // Handle Mouse Events relative to Canvas
+        // Note: Global mousemove is used for cursor, this is for physics
+        window.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.x - rect.left;
+            mouse.y = e.y - rect.top;
+        });
+
+        window.addEventListener('mousedown', () => { mouse.isPressed = true; mouse.radius = 200; });
+        window.addEventListener('mouseup', () => { mouse.isPressed = false; mouse.radius = 100; });
+
+        // Particle Class
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y; // Current position
+                this.originX = x; // Target position (home)
+                this.originY = y;
+                this.color = color;
+                this.size = 2; // Particle size
+                this.vx = 0; // Velocity
+                this.vy = 0;
+                this.friction = 0.95; // Damping
+                this.ease = 0.15; // Return speed
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.rect(this.x, this.y, this.size, this.size); // Using rect for performance over arc
+                ctx.fill();
+            }
+
+            update() {
+                // Distance from mouse
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                // Physics calculation
+                // If mouse is close (or clicked), push particles away
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                let force = (mouse.radius - distance) / mouse.radius;
+
+                // Click creates a stronger explosion force
+                let repelStrength = mouse.isPressed ? 30 : 5;
+
+                if (distance < mouse.radius) {
+                    // Move away from mouse
+                    this.vx -= forceDirectionX * force * repelStrength;
+                    this.vy -= forceDirectionY * force * repelStrength;
+                } else {
+                    // Return to origin logic
+                    if (this.x !== this.originX) {
+                        let dxHome = this.x - this.originX;
+                        this.vx -= dxHome * this.ease * 0.5; // Spring force better return
+                    }
+                    if (this.y !== this.originY) {
+                        let dyHome = this.y - this.originY;
+                        this.vy -= dyHome * this.ease * 0.5;
+                    }
+                }
+
+                // Apply velocity and friction
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+        }
+
+        // Initialize Text and Particles
+        function init() {
+            particlesArray = [];
+
+            // 1. Draw text on canvas first
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '800 120px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Gradient Logic for text
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, '#ffffff'); // White
+            gradient.addColorStop(0.5, '#00f3ff'); // Cyan
+            gradient.addColorStop(1, '#bc13fe'); // Purple
+            ctx.fillStyle = gradient;
+
+            // Draw lines
+            ctx.fillText('HELLO', canvas.width / 2, canvas.height / 2 - 50);
+            ctx.fillText('WORLD.', canvas.width / 2, canvas.height / 2 + 60);
+
+            // 2. Scan pixel data
+            // Getting image data from the area where text is drawn
+            const textCoordinates = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+            // Clear canvas to prepare for particles
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 3. Create particles based on pixel alpha
+            // Skip 4 or 5 pixels for performance and "grid" look
+            const gap = 4;
+
+            for (let y = 0; y < textCoordinates.height; y += gap) {
+                for (let x = 0; x < textCoordinates.width; x += gap) {
+                    // Pixels are r, g, b, a (4 values per pixel)
+                    // Index of alpha value is ((y * width) + x) * 4 + 3
+                    const index = (y * 4 * textCoordinates.width) + (x * 4) + 3;
+
+                    if (textCoordinates.data[index] > 128) {
+                        // If pixel is visible (alpha > roughly 50%)
+                        // Restore colors or use a specific color. Let's sample the color!
+                        const red = textCoordinates.data[index - 3];
+                        const green = textCoordinates.data[index - 2];
+                        const blue = textCoordinates.data[index - 1];
+                        const color = `rgb(${red}, ${green}, ${blue})`;
+
+                        particlesArray.push(new Particle(x, y, color));
+                    }
+                }
+            }
+        }
+
+        // Animation Loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].draw();
+                particlesArray[i].update();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // Wait for font to load before init
+        document.fonts.ready.then(function () {
+            init();
+            animate();
+        });
+
+        // Handle Resize (Optional debounced re-init could be added here)
+
+        /**
+         * ORIGINAL UI LOGIC (Tilt, Cursor, Button)
+         */
+        const card = document.getElementById('card');
+        const containerBody = document.body;
+
+        containerBody.addEventListener('mousemove', (e) => {
             const { innerWidth, innerHeight } = window;
-            const x = (innerWidth / 2 - e.pageX) / 20; // rotation strength
-            const y = (innerHeight / 2 - e.pageY) / 20; 
+            const x = (innerWidth / 2 - e.pageX) / 25;
+            const y = (innerHeight / 2 - e.pageY) / 25;
 
             card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
         });
 
-        // Reset on leave
-        container.addEventListener('mouseleave', () => {
+        containerBody.addEventListener('mouseleave', () => {
             card.style.transition = 'transform 0.5s ease';
             card.style.transform = `rotateY(0deg) rotateX(0deg)`;
             setTimeout(() => { card.style.transition = 'transform 0.1s ease-out'; }, 500);
         });
-        
-        container.addEventListener('mouseenter', () => {
-            card.style.transition = 'none'; // snappy movement on enter
-        });
 
+        containerBody.addEventListener('mouseenter', () => { card.style.transition = 'none'; });
 
-        // --- Custom Cursor Logic ---
+        // Cursor
         const follower = document.getElementById('follower');
         const dot = document.getElementById('dot');
 
         if (window.matchMedia("(pointer: fine)").matches) {
             document.addEventListener('mousemove', (e) => {
-                // Using requestAnimationFrame for smoother performance
                 requestAnimationFrame(() => {
                     dot.style.left = e.clientX + 'px';
                     dot.style.top = e.clientY + 'px';
-                    
-                    // Add a slight delay/lag to the follower for organic feel
+
                     follower.animate({
                         left: e.clientX + 'px',
                         top: e.clientY + 'px'
@@ -259,40 +447,7 @@
                 });
             });
         }
-
-        // --- Interactive Button ---
-        const btn = document.getElementById('exploreBtn');
-        btn.addEventListener('click', () => {
-            btn.innerHTML = 'Welcome!';
-            btn.style.background = 'var(--primary-accent)';
-            btn.style.color = '#fff';
-            
-            // Simple visual feedback
-            const ripple = document.createElement('div');
-            ripple.style.position = 'absolute';
-            ripple.style.width = '100vw';
-            ripple.style.height = '100vw';
-            ripple.style.background = 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%)';
-            ripple.style.left = '50%';
-            ripple.style.top = '50%';
-            ripple.style.transform = 'translate(-50%, -50%) scale(0)';
-            ripple.style.borderRadius = '50%';
-            ripple.style.zIndex = '5';
-            ripple.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out';
-            
-            document.body.appendChild(ripple);
-            
-            // Force reflow
-            void ripple.offsetWidth;
-            
-            ripple.style.transform = 'translate(-50%, -50%) scale(3)';
-            ripple.style.opacity = '0';
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 1000);
-        });
-
     </script>
 </body>
+
 </html>
