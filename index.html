@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World | Next-Gen Experience</title>
+    <style>
+        /* Import Font */
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap');
+
+        /* Variables */
+        :root {
+            --bg-color: #050510;
+            --primary-accent: #00f3ff;
+            --secondary-accent: #bc13fe;
+            --text-color: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            perspective: 1000px; /* For 3D effect */
+        }
+
+        /* Ambient Background */
+        .ambient-light {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out;
+        }
+        .blob-1 {
+            top: 10%; left: 25%; width: 500px; height: 500px;
+            background: radial-gradient(circle, var(--secondary-accent) 0%, transparent 70%);
+            animation-delay: 0s;
+        }
+        .blob-2 {
+            bottom: 10%; right: 25%; width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--primary-accent) 0%, transparent 70%);
+            animation-delay: -5s;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 5rem 7rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            transform-style: preserve-3d;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 7rem;
+            font-weight: 800;
+            letter-spacing: -3px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.3));
+            animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        p {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 0.5px;
+            animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Interactive Button */
+        .btn {
+            margin-top: 3.5rem;
+            padding: 1.2rem 3rem;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--bg-color);
+            background: #ffffff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            z-index: -1;
+            transition: opacity 0.4s;
+            opacity: 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            color: white;
+        }
+        
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:active {
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Cursor */
+        @media (pointer: fine) {
+            .cursor-follower {
+                position: fixed;
+                width: 24px;
+                height: 24px;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, border-color 0.3s;
+                mix-blend-mode: difference;
+            }
+            .cursor-dot {
+                position: fixed;
+                width: 6px;
+                height: 6px;
+                background: white;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 10000;
+                transform: translate(-50%, -50%);
+            }
+            body:active .cursor-follower {
+                width: 20px;
+                height: 20px;
+                border-color: var(--primary-accent);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Blobs -->
+    <div class="ambient-light">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <!-- Custom Cursor (Desktop only) -->
+    <div class="cursor-follower" id="follower"></div>
+    <div class="cursor-dot" id="dot"></div>
+
+    <!-- Main Content -->
+    <div class="container" id="card">
+        <h1>HELLO<br>WORLD.</h1>
+        <p>Experience the Future of Web Design</p>
+        <button class="btn" id="exploreBtn">Get Started</button>
+    </div>
+
+    <script>
+        // --- 3D Tilt Effect ---
+        const card = document.getElementById('card');
+        const container = document.body;
+
+        container.addEventListener('mousemove', (e) => {
+            const { innerWidth, innerHeight } = window;
+            const x = (innerWidth / 2 - e.pageX) / 20; // rotation strength
+            const y = (innerHeight / 2 - e.pageY) / 20; 
+
+            card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+
+        // Reset on leave
+        container.addEventListener('mouseleave', () => {
+            card.style.transition = 'transform 0.5s ease';
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            setTimeout(() => { card.style.transition = 'transform 0.1s ease-out'; }, 500);
+        });
+        
+        container.addEventListener('mouseenter', () => {
+            card.style.transition = 'none'; // snappy movement on enter
+        });
+
+
+        // --- Custom Cursor Logic ---
+        const follower = document.getElementById('follower');
+        const dot = document.getElementById('dot');
+
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', (e) => {
+                // Using requestAnimationFrame for smoother performance
+                requestAnimationFrame(() => {
+                    dot.style.left = e.clientX + 'px';
+                    dot.style.top = e.clientY + 'px';
+                    
+                    // Add a slight delay/lag to the follower for organic feel
+                    follower.animate({
+                        left: e.clientX + 'px',
+                        top: e.clientY + 'px'
+                    }, { duration: 500, fill: "forwards" });
+                });
+            });
+        }
+
+        // --- Interactive Button ---
+        const btn = document.getElementById('exploreBtn');
+        btn.addEventListener('click', () => {
+            btn.innerHTML = 'Welcome!';
+            btn.style.background = 'var(--primary-accent)';
+            btn.style.color = '#fff';
+            
+            // Simple visual feedback
+            const ripple = document.createElement('div');
+            ripple.style.position = 'absolute';
+            ripple.style.width = '100vw';
+            ripple.style.height = '100vw';
+            ripple.style.background = 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%)';
+            ripple.style.left = '50%';
+            ripple.style.top = '50%';
+            ripple.style.transform = 'translate(-50%, -50%) scale(0)';
+            ripple.style.borderRadius = '50%';
+            ripple.style.zIndex = '5';
+            ripple.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out';
+            
+            document.body.appendChild(ripple);
+            
+            // Force reflow
+            void ripple.offsetWidth;
+            
+            ripple.style.transform = 'translate(-50%, -50%) scale(3)';
+            ripple.style.opacity = '0';
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 1000);
+        });
+
+    </script>
+</body>
+</html>
